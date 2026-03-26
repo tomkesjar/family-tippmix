@@ -1,10 +1,12 @@
 package kt.tippmix.repository;
 
 import kt.tippmix.model.Game;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
 
+@Repository
 public class GameRepository {
 
     private Map<String, Game> matchRepository;

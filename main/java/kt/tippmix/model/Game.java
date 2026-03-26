@@ -10,6 +10,7 @@ public class Game {
     private String awayTeam;
     private int homeGoals;
     private int awayGoals;
+    private int winner; // 1-0-2
 
     public Game(LocalDateTime matchDate, String homeTeam, String awayTeam, int homeGoals, int awayGoals) {
         this.matchDate = matchDate;
@@ -57,5 +58,16 @@ public class Game {
 
     public void setAwayGoals(int awayGoals) {
         this.awayGoals = awayGoals;
+    }
+
+    @Override
+    public String toString() {
+        return "Game{" +
+                "matchDate=" + matchDate +
+                ", homeTeam='" + homeTeam + '\'' +
+                ", awayTeam='" + awayTeam + '\'' +
+                ", homeGoals=" + homeGoals +
+                ", awayGoals=" + awayGoals +
+                '}';
     }
 }
