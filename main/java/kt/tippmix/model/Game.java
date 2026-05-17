@@ -1,31 +1,59 @@
 package kt.tippmix.model;
 
 
-import java.time.LocalDate;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name="game")
 public class Game {
-    private LocalDateTime matchDate;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @Column(name="gamedate")
+    private LocalDateTime gameDate;
+
+    @Column(name="hometeam")
     private String homeTeam;
+    @Column(name="awayteam")
     private String awayTeam;
+    @Column(name="homegoals")
     private int homeGoals;
+    @Column(name="awaygoals")
     private int awayGoals;
+    @Column(name="winner")
     private int winner; // 1-0-2
 
-    public Game(LocalDateTime matchDate, String homeTeam, String awayTeam, int homeGoals, int awayGoals) {
-        this.matchDate = matchDate;
+
+    public Game() {
+    }
+
+    public Game(Long id, LocalDateTime gameDate, String homeTeam, String awayTeam) {
+        this.id = id;
+        this.gameDate = gameDate;
+        this.homeTeam = homeTeam;
+        this.awayTeam = awayTeam;
+    }
+
+    public Game(Long id, LocalDateTime gameDate, String homeTeam, String awayTeam, int homeGoals, int awayGoals, int winner) {
+        this.id = id;
+        this.gameDate = gameDate;
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
         this.homeGoals = homeGoals;
         this.awayGoals = awayGoals;
+        this.winner = winner;
     }
 
-    public LocalDateTime getMatchDate() {
-        return matchDate;
+    public LocalDateTime getGameDate() {
+        return gameDate;
     }
 
-    public void setMatchDate(LocalDateTime matchDate) {
-        this.matchDate = matchDate;
+    public void setGameDate(LocalDateTime gameDate) {
+        this.gameDate = gameDate;
     }
 
     public String getHomeTeam() {
@@ -63,11 +91,13 @@ public class Game {
     @Override
     public String toString() {
         return "Game{" +
-                "matchDate=" + matchDate +
+                "id=" + id +
+                ", matchDate=" + gameDate +
                 ", homeTeam='" + homeTeam + '\'' +
                 ", awayTeam='" + awayTeam + '\'' +
                 ", homeGoals=" + homeGoals +
                 ", awayGoals=" + awayGoals +
+                ", winner=" + winner +
                 '}';
     }
 }
