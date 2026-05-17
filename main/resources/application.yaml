@@ -1,0 +1,33 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: YOUR_GOOGLE_CLIENT_ID
+            client-secret: YOUR_GOOGLE_SECRET
+            scope:
+              - email
+              - profile
+          facebook:
+            client-id: YOUR_FACEBOOK_APP_ID
+            client-secret: YOUR_FACEBOOK_SECRET
+            scope:
+              - email
+              - public_profile
+
+allowed:
+  secret-names:
+    - "Fürge Szarvas"
+    - "Ülő Bika"
+    - "Fényes Gepárd"
+    - "Király Kígyó"
+    - "Örömittas Teknős"
+    - "Űzött Hiúz"
+  secret-filenames:
+    - "deer.png"
+    - "bull.png"
+    - "cheetah.png"
+    - "snake.png"
+    - "turtle.png"
+    - "cougar.png"
