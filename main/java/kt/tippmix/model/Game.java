@@ -21,11 +21,11 @@ public class Game {
     @Column(name="awayteam")
     private String awayTeam;
     @Column(name="homegoals")
-    private int homeGoals;
+    private Integer homeGoals;
     @Column(name="awaygoals")
-    private int awayGoals;
+    private Integer awayGoals;
     @Column(name="winner")
-    private int winner; // 1-0-2
+    private Integer winner; // 1-0-2
 
 
     public Game() {
@@ -38,7 +38,7 @@ public class Game {
         this.awayTeam = awayTeam;
     }
 
-    public Game(Long id, LocalDateTime gameDate, String homeTeam, String awayTeam, int homeGoals, int awayGoals, int winner) {
+    public Game(Long id, LocalDateTime gameDate, String homeTeam, String awayTeam, Integer homeGoals, Integer awayGoals, Integer winner) {
         this.id = id;
         this.gameDate = gameDate;
         this.homeTeam = homeTeam;
@@ -72,20 +72,28 @@ public class Game {
         this.awayTeam = awayTeam;
     }
 
-    public int getHomeGoals() {
+    public Integer getHomeGoals() {
         return homeGoals;
     }
 
-    public void setHomeGoals(int homeGoals) {
+    public void setHomeGoals(Integer homeGoals) {
         this.homeGoals = homeGoals;
     }
 
-    public int getAwayGoals() {
+    public Integer getAwayGoals() {
         return awayGoals;
     }
 
-    public void setAwayGoals(int awayGoals) {
+    public void setAwayGoals(Integer awayGoals) {
         this.awayGoals = awayGoals;
+    }
+
+    public Integer getWinner() {
+        return winner;
+    }
+
+    public void setWinner(Integer winner) {
+        this.winner = winner;
     }
 
     @Override

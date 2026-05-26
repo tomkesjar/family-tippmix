@@ -27,14 +27,6 @@ public class SecretNameController {
         this.secretNameService = secretNameService;
     }
 
-    // This should be better approach with Spring Security than get(Authentication authentication) {..}
-//    @GetMapping()
-//    public ResponseEntity<String> get(@AuthenticationPrincipal CustomUserDetails userDetails) {
-//        User user = userDetails.getUser();
-//        String secretName = secretNameService.getSecretName(user);
-//        return ResponseEntity.ok(secretName);
-//    }
-
     @GetMapping()
     public ResponseEntity<Pair<String, String>> get(Authentication authentication) {
         User user = (User) authentication.getPrincipal();

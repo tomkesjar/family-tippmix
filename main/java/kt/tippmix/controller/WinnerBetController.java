@@ -1,8 +1,6 @@
 package kt.tippmix.controller;
 
-import kt.tippmix.model.Nation;
-import kt.tippmix.model.User;
-import kt.tippmix.model.WinnerBet;
+import kt.tippmix.model.*;
 import kt.tippmix.repository.UserRepository;
 import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +18,22 @@ public class WinnerBetController {
     }
 
     @PostMapping()
-    public ResponseEntity<Pair<String, String>> betForWinnerAndTopGoalScorer(
+    public ResponseEntity<WinnerBetResponse> betForWinnerAndTopGoalScorer(
             Authentication authentication, @RequestBody WinnerBet winnerBet) {
         User user = (User) authentication.getPrincipal();
+
+        if (user.getFavouriteNation() != null && user.getGoalScorerNationality() != null) {
+            WinnerBetResponse response = new WinnerBetResponse(WinnerBetStatus.ERROR,"User already selected both winner country and top goal scorer country", Pair.of(user.getFavouriteNation(), user.getGoalScorerNationality()));
+            return ResponseEntity.ok().body(response);
+        }
+
         String winnerNation = winnerBet.getWinner();
         String topGoalScorerNation = winnerBet.getGoal();
+
+        WinnerBetStatus status = user.getFavouriteNation() == null && user.getGoalScorerNationality() == null
+                ? WinnerBetStatus.OK : WinnerBetStatus.PARTIAL;
+        String errorMessage = user.getFavouriteNation() == null && user.getGoalScorerNationality() == null
+                ? "" : "Partially set - one of them was already selected beforehand";
 
         try {
             if (user.getFavouriteNation() == null) {
@@ -40,9 +49,11 @@ public class WinnerBetController {
             } else {
                 topGoalScorerNation = user.getGoalScorerNationality();
             }
-            return ResponseEntity.ok().body(Pair.of(winnerNation, topGoalScorerNation));
+            WinnerBetResponse response = new WinnerBetResponse(status,errorMessage, Pair.of(winnerNation, topGoalScorerNation));
+            return ResponseEntity.ok().body(response);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Pair.of("Error message: ", e.getMessage()));
+            WinnerBetResponse failResponse = new WinnerBetResponse(WinnerBetStatus.ERROR,"Error message: " + e.getMessage(), Pair.of(user.getFavouriteNation(), user.getGoalScorerNationality()));
+            return ResponseEntity.badRequest().body(failResponse);
         }
 
 

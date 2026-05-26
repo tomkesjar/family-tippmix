@@ -1,48 +1,47 @@
 package kt.tippmix.controller;
 
+import kt.tippmix.model.DateRequest;
 import kt.tippmix.model.Game;
-import kt.tippmix.repository.GameRepository;
+import kt.tippmix.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/game")
 @CrossOrigin(origins = "http://localhost:5173") // React dev server
-public class GameService {
+public class GameController {
 
-    private GameRepository gameRepository;
+    private GameService gameService;
 
-    public GameService(@Autowired GameRepository gameRepository) {
-        this.gameRepository = gameRepository;
+    public GameController(@Autowired GameService gameService) {
+        this.gameService = gameService;
     }
 
     @GetMapping("/all")
     public ResponseEntity<List<Game>> getAll() {
-        List<Game> gameList = (List) gameRepository.findAll();
+        List<Game> gameList = (List) gameService.getAll();
         return ResponseEntity.ok().body(gameList);
     }
 
     @GetMapping("/id")
-    public ResponseEntity<Game> getById(@RequestParam Long id) {
-        return gameRepository.findById(id)
+    public ResponseEntity<Game> getById(@RequestBody Long id) {
+        return gameService.getById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/fromdate")
-    public ResponseEntity<List<Game>> getByDate(@RequestParam String date) {
-        LocalDateTime dateTime = LocalDateTime.parse(date);
-        List<Game> upcomingGames = gameRepository.findAllAfterDate(dateTime);
+    public ResponseEntity<List<Game>> getAllAfterDate(@RequestBody DateRequest dateRequest) {
+        List<Game> upcomingGames = gameService.getUpcomingGames(dateRequest.getDate());
         return ResponseEntity.ok().body(upcomingGames);
     }
 
     // Create a new match game, Allowed user: ADMIN
-    @PostMapping("/new")
+    @PostMapping("/newgame")
     public void save(@RequestBody Game newGame) {
-        gameRepository.save(newGame);
+        gameService.save(newGame);
     }
 }

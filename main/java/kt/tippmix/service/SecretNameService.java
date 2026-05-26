@@ -47,7 +47,7 @@ public SecretNameService(@Autowired AllowedSecretNames allowedSecretNames, @Auto
             bookedAllowedSecretNames.put(selectedFileName, selectedSecretName);
             return Pair.of(selectedFileName, selectedSecretName);
         } else {
-            return Pair.of(user.getSecretFileName(), user.getSecretName());
+            return Pair.of(user.getSecretFileName(), user.getSecretName()); //TODO create SecretNameResponse record with status AlreadySelected, SUCCESS
         }
     }
 
