@@ -1,25 +1,32 @@
 package kt.tippmix.repository;
 
 import kt.tippmix.model.Game;
-import org.springframework.stereotype.Repository;
 
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
+
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
-@Repository
-public class GameRepository {
 
-    private Map<String, Game> matchRepository;
+public interface GameRepository extends CrudRepository<Game, Long> {
 
-    public GameRepository(Map<String, Game> matchRepository) {
-        this.matchRepository = matchRepository;
-    }
+//    @Query("SELECT g FROM Game g")
+//    List<Game> findAll();
+//
+//    @Query("SELECT g FROM Game g WHERE g.id = :id")
+//    @Query(value = "SELECT * FROM game WHERE id = :id", nativeQuery = true)
+//    Game findById(@Param("id") int id);
 
-    public List<Game> findAll() {
-        return matchRepository.values().stream().toList();
-    }
+//    @Modifying
+//    @Query(value = "INSERT INTO game (hometeam, awayteam, date, homegoals, awaygoals, winner) " +
+//            "VALUES (:#{#game.homeTeam}, :#{#game.awayTeam}, :#{#game.gameDate}, " +
+//            ":#{#game.homeGoals}, :#{#game.awayGoals}, :#{#game.winner})",
+//            nativeQuery = true)
+//    void insertGame(@Param("game") Game game);
 
-    public void save(Game game) {
-        matchRepository.put(game.getMatchDate().toString(), game);
-    }
+    @Query("SELECT g FROM Game g WHERE g.gameDate >= :dateTime")
+    List<Game> findAllAfterDate(LocalDateTime dateTime);
 }
