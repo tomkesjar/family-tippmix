@@ -48,6 +48,10 @@ public class Game {
         this.winner = winner;
     }
 
+    public long getId() {
+        return id;
+    }
+
     public LocalDateTime getGameDate() {
         return gameDate;
     }

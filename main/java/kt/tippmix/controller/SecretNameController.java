@@ -1,14 +1,11 @@
 package kt.tippmix.controller;
 
-import kt.tippmix.model.Game;
 import kt.tippmix.model.User;
-import kt.tippmix.repository.UserRepository;
 import kt.tippmix.service.SecretNameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

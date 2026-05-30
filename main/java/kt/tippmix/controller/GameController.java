@@ -33,7 +33,7 @@ public class GameController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/fromdate")
+    @PostMapping("/fromdate")
     public ResponseEntity<List<Game>> getAllAfterDate(@RequestBody DateRequest dateRequest) {
         List<Game> upcomingGames = gameService.getUpcomingGames(dateRequest.getDate());
         return ResponseEntity.ok().body(upcomingGames);

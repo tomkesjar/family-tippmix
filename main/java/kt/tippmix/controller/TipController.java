@@ -41,7 +41,7 @@ public class TipController {
         return ResponseEntity.ok().body(upcomingGames);
     }
 
-    //ot good, we need to use logged in users!
+
     @PostMapping("/save")
     public ResponseEntity<?> save(Authentication authentication, @RequestBody List<Tip> newTip) {
         User user = (User) authentication.getPrincipal();
