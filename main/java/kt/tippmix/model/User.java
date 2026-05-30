@@ -41,6 +41,9 @@ public class User implements UserDetails {
     @Column(name="goal")
     private String goalScorerNationality;
 
+    @Column(name="mostgoals")
+    private String mostGoals;
+
     @Column(name="pw", nullable = true) //OAuth users won't have passwords
     @Nonnull private String pw;
 
@@ -215,6 +218,14 @@ public class User implements UserDetails {
 
     public void setSecretFileName(String secretFileName) {
         this.secretFileName = secretFileName;
+    }
+
+    public String getMostGoals() {
+        return mostGoals;
+    }
+
+    public void setMostGoals(String mostGoals) {
+        this.mostGoals = mostGoals;
     }
 
     @Override
