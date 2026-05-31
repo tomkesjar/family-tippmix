@@ -1,25 +1,27 @@
 package kt.tippmix.model;
 
 public class MatchBet {
-    private Long id;
+    private Long matchId;
     private int homeGoals;
     private int awayGoals;
+    private int winner;
 
     public MatchBet() {
     }
 
-    public MatchBet(Long id, int homeGoals, int awayGoals) {
-        this.id = id;
+    public MatchBet(Long matchId, int homeGoals, int awayGoals, int winner) {
+        this.matchId = matchId;
         this.homeGoals = homeGoals;
         this.awayGoals = awayGoals;
+        this.winner = winner;
     }
 
-    public Long getId() {
-        return id;
+    public Long getMatchId() {
+        return matchId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setMatchId(Long matchId) {
+        this.matchId = matchId;
     }
 
     public int getHomeGoals() {
@@ -36,5 +38,13 @@ public class MatchBet {
 
     public void setAwayGoals(int awayGoals) {
         this.awayGoals = awayGoals;
+    }
+
+    public int getWinner() {
+        return winner;
+    }
+
+    public void setWinner(int winner) {
+        this.winner = winner;
     }
 }
