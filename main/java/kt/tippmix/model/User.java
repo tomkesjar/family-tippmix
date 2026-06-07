@@ -47,6 +47,9 @@ public class User implements UserDetails {
     @Column(name="pw", nullable = true) //OAuth users won't have passwords
     @Nonnull private String pw;
 
+    @Column(name="other")
+    @Nonnull private String other;
+
     @Column(name="emailaddress", nullable = false, unique=true)
     @Nonnull private String email;
 
@@ -103,7 +106,7 @@ public class User implements UserDetails {
     public User() {}
 
     //Constructor for LOCAL user
-    public User(long id, String userName, String secretName, String secretFileName, String favouriteNation, String goalScorerNationality, String pw, String email, AuthProvider provider, Role role, int points) {
+    public User(long id, String userName, String secretName, String secretFileName, String favouriteNation, String goalScorerNationality, String pw, String email, AuthProvider provider, Role role, int points, String other) {
         this.id = id;
         this.userName = userName;
         this.secretName = secretName;
@@ -115,6 +118,7 @@ public class User implements UserDetails {
         this.provider = provider;
         this.role = role;
         this.points = points;
+        this.other = other;
     }
 
     //Constructor for OAuth user (GOOGLE, FACEBOOK)
@@ -234,6 +238,16 @@ public class User implements UserDetails {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    @Nonnull
+    public String getOther() {
+        return other;
+    }
+
+    public User setOther(@Nonnull String other) {
+        this.other = other;
+        return this;
     }
 
     @Override

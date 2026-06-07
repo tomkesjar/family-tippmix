@@ -44,6 +44,10 @@ public class GameService {
         gameRepository.saveAll(games);
     }
 
+    public void deleteGame(Long gameId) {
+        gameRepository.deleteById(gameId);
+    }
+
     public void updateResults(List<GameResultUpdate> updates) {
         updates.forEach(u ->
             gameRepository.findById(u.getGameId()).ifPresent(game -> {

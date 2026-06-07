@@ -27,6 +27,9 @@ public class Game {
     @Column(name="winner")
     private Integer winner; // 1-0-2
 
+    @Column(name="knockout")
+    private Boolean knockout = false;
+
 
     public Game() {
     }
@@ -98,6 +101,14 @@ public class Game {
 
     public void setWinner(Integer winner) {
         this.winner = winner;
+    }
+
+    public Boolean isKnockout() {
+        return knockout;
+    }
+
+    public void setKnockout(Boolean knockout) {
+        this.knockout = knockout;
     }
 
     @Override

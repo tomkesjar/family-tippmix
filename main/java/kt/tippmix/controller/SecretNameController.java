@@ -5,6 +5,7 @@ import kt.tippmix.service.SecretNameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +26,7 @@ public class SecretNameController {
     }
 
     @GetMapping()
+    @PreAuthorize("hasAuthority('PLAYER')")
     public ResponseEntity<Pair<String, String>> get(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         Pair<String, String> secretName = secretNameService.getSecretName(user);

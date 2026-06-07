@@ -1,13 +1,19 @@
 package kt.tippmix.service;
 
+import kt.tippmix.model.AllBetsRow;
 import kt.tippmix.model.Bet;
 import kt.tippmix.model.BetHistoryRow;
+import kt.tippmix.model.BetInfo;
+import kt.tippmix.model.GameInfo;
+import kt.tippmix.model.PlayerInfo;
 import kt.tippmix.model.Tip;
 import kt.tippmix.repository.BetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BetService {
@@ -20,6 +26,33 @@ public class BetService {
 
     public List<Bet> getAll() {
         List<Bet> tipList = (List) betRepository.findAll();
+        return tipList;
+    }
+
+    /**
+     * Groups evaluated bets as Map&lt;GameInfo, Map&lt;PlayerInfo, BetInfo&gt;&gt;.
+     * Insertion order matches the query ordering (game date, then player secret name).
+     */
+    public Map<GameInfo, Map<PlayerInfo, BetInfo>> getAllEvaluated() {
+        List<AllBetsRow> rows = betRepository.findAllEvaluated();
+        Map<GameInfo, Map<PlayerInfo, BetInfo>> grouped = new LinkedHashMap<>();
+
+        for (AllBetsRow row : rows) {
+            GameInfo  game   = new GameInfo(row.getGameDate(), row.getHomeTeam(), row.getAwayTeam(),
+                                            row.getGameHomeGoals(), row.getGameAwayGoals(), row.getGameWinner());
+            PlayerInfo player = new PlayerInfo(row.getSecretName(), row.getSecretFileName());
+            BetInfo    bet    = new BetInfo(row.getBetId(), row.getMatchId(), row.getPlayerId(),
+                                            row.getBetHomeGoals(), row.getBetAwayGoals(), row.getBetWinner(),
+                                            row.getPoint(), row.getExact());
+
+            grouped.computeIfAbsent(game, k -> new LinkedHashMap<>()).put(player, bet);
+        }
+
+        return grouped;
+    }
+
+    public List<Bet> getAllByGameId(Long gameId) {
+        List<Bet> tipList = (List) betRepository.findAllGameId(gameId);
         return tipList;
     }
 

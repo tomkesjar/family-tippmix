@@ -1,7 +1,9 @@
 package kt.tippmix.repository;
 
+import kt.tippmix.model.AllBetsRow;
 import kt.tippmix.model.Bet;
 import kt.tippmix.model.BetHistoryRow;
+import kt.tippmix.model.DetailedDataRow;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -19,6 +21,9 @@ public interface BetRepository extends CrudRepository<Bet, Long> {
     @Query("SELECT b FROM Bet b WHERE b.playerId = :playerId")
     List<Bet> findAllByUser(Long playerId);
 
+    @Query("SELECT b FROM Bet b WHERE b.matchId = :matchId")
+    List<Bet> findAllGameId(Long matchId);
+
     @Query("""
            SELECT new kt.tippmix.model.BetHistoryRow(
                b.matchId, g.gameDate,
@@ -33,6 +38,32 @@ public interface BetRepository extends CrudRepository<Bet, Long> {
 
 //    @Query("SELECT t FROM Tip t WHERE t.username = :userName AND t.gameDate >= :dateTime")
 //    List<Tip> findUpcomingByUser(String userName, LocalDateTime dateTime);
+
+    @Query("""
+           SELECT new kt.tippmix.model.AllBetsRow(
+               g.gameDate, g.homeTeam, g.awayTeam,
+               g.homeGoals, g.awayGoals, g.winner,
+               b.id, b.matchId, b.playerId,
+               b.homeGoals, b.awayGoals, b.winner, b.point, b.exact,
+               u.secretName, u.secretFileName)
+           FROM Bet b, Game g, User u
+           WHERE b.matchId = g.id AND u.id = b.playerId
+             AND b.point IS NOT NULL AND b.exact IS NOT NULL
+           ORDER BY g.gameDate, u.secretName
+           """)
+    List<AllBetsRow> findAllEvaluated();
+
+    @Query("""
+           SELECT new kt.tippmix.model.DetailedDataRow(
+               u.id, u.userName, u.other, u.secretName, u.favouriteNation, u.goalScorerNationality, u.mostGoals,
+               g.id, g.gameDate, g.homeTeam, g.awayTeam, g.homeGoals, g.awayGoals, g.winner,
+               b.id, b.homeGoals, b.awayGoals, b.winner, b.point, b.exact,
+               p.matchPoint, p.winnerPoint, p.goalPoint, p.mostGoalPoint, p.bonusPoint, p.total)
+           FROM Bet b, Game g, User u, Point p
+           WHERE b.matchId = g.id AND u.id = b.playerId AND p.playerId = u.id
+           ORDER BY u.secretName, g.gameDate
+           """)
+    List<DetailedDataRow> findDetailedData();
 
     @Modifying
     @Transactional

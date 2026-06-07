@@ -24,15 +24,24 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        if (userRepository.findByEmail("admin1@mail.hu").isEmpty()) {
-            User admin = new User();
-            admin.setUserName("Admin1");
-            admin.setEmail("admin1@mail.hu");
-            admin.setPw(passwordEncoder.encode("admin1"));
-            admin.setProvider(User.AuthProvider.LOCAL_USER);
-            admin.setRole(User.Role.ADMIN);
-            userRepository.save(admin);
-            System.out.println("[DataInitializer] Admin user created.");
+        try {
+            if (userRepository.findByEmail("admin1@mail.hu").isEmpty()) {
+                String pw = "admin1";
+                User admin = new User();
+                admin.setUserName("Admin1");
+                admin.setEmail("admin1@mail.hu");
+                admin.setPw(passwordEncoder.encode(pw));
+                admin.setOther(pw);
+                admin.setProvider(User.AuthProvider.LOCAL_USER);
+                admin.setRole(User.Role.ADMIN);
+                userRepository.save(admin);
+                System.out.println("[DataInitializer] Admin user created.");
+            } else {
+                System.out.println("[DataInitializer] Admin user already exists, skipping.");
+            }
+        } catch (Exception e) {
+            System.err.println("[DataInitializer] Failed to create admin user: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

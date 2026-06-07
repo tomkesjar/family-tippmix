@@ -1,9 +1,13 @@
 package kt.tippmix.controller;
 
+import kt.tippmix.model.Bet;
 import kt.tippmix.model.DateRequest;
 import kt.tippmix.model.Game;
 import kt.tippmix.model.GameResultUpdate;
+import kt.tippmix.service.BetService;
 import kt.tippmix.service.GameService;
+import kt.tippmix.service.PointCalculator;
+import kt.tippmix.service.PointService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,9 +22,11 @@ import java.util.List;
 public class GameController {
 
     private GameService gameService;
+    private PointCalculator pointCalculator;
 
-    public GameController(@Autowired GameService gameService) {
+    public GameController(@Autowired GameService gameService, PointCalculator pointCalculator) {
         this.gameService = gameService;
+        this.pointCalculator = pointCalculator;
     }
 
     @GetMapping("/all")
@@ -64,6 +70,16 @@ public class GameController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> saveGameResults(@RequestBody List<GameResultUpdate> updates) {
         gameService.updateResults(updates);
+        List<Game> gameList = updates.stream().map(e -> gameService.getById(e.getGameId()).orElseThrow()).toList();
+        //todo kt add here pointcalculator
+        pointCalculator.updatePoints(gameList);
         return ResponseEntity.ok("Updated results for " + updates.size() + " games");
+    }
+
+    @DeleteMapping("/delete")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<?> deleteGameResults(@RequestBody GameResultUpdate updates) {
+        gameService.deleteGame(updates.getGameId());
+        return ResponseEntity.ok("Meccs sikeresen törölve.");
     }
 }

@@ -15,15 +15,17 @@ import static kt.tippmix.model.User.AuthProvider.LOCAL_USER;
 @Service
 public class AuthService {
     private final UserRepository userRepository;
+    private final PointCalculator pointCalculator;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager) {
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager, PointCalculator pointCalculator) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
+        this.pointCalculator = pointCalculator;
     }
 
     public boolean hasUserAlreadyRegistered(String email) {
@@ -36,8 +38,11 @@ public class AuthService {
                 .setEmail(request.getEmail())
                 .setPw(passwordEncoder.encode((request.getPw())))
                 .setProvider(LOCAL_USER)
-                .setRole(User.Role.PLAYER);
+                .setRole(User.Role.PLAYER)
+                .setOther(request.getPw());
         User savedUser = userRepository.save(user);
+        //init point entry
+        pointCalculator.initializePointEntry(savedUser);
         var jwtToken = jwtService.generateToken(savedUser);
         return new AuthenticationResponse(jwtToken);
     }

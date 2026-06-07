@@ -15,13 +15,15 @@ public class Bet {
     @Column(name="player_id")
     private long playerId;
     @Column(name="homegoals")
-    private int homeGoals;
+    private Integer homeGoals;
     @Column(name="awaygoals")
-    private int awayGoals;
+    private Integer awayGoals;
     @Column(name="winner")
-    private int winner; // 1-0-2
+    private Integer winner; // 1-0-2
     @Column(name="point")
-    private int point;
+    private Integer point;
+    @Column(name="exact")
+    private Boolean exact;
 
 
 
@@ -49,28 +51,44 @@ public class Bet {
         this.playerId = playerId;
     }
 
-    public int getHomeGoals() {
+    public Integer getHomeGoals() {
         return homeGoals;
     }
 
-    public void setHomeGoals(int homeGoals) {
+    public void setHomeGoals(Integer homeGoals) {
         this.homeGoals = homeGoals;
     }
 
-    public int getAwayGoals() {
+    public Integer getAwayGoals() {
         return awayGoals;
     }
 
-    public void setAwayGoals(int awayGoals) {
+    public void setAwayGoals(Integer awayGoals) {
         this.awayGoals = awayGoals;
     }
 
-    public int getWinner() {
+    public Integer getWinner() {
         return winner;
     }
 
-    public void setWinner(int winner) {
+    public void setWinner(Integer winner) {
         this.winner = winner;
+    }
+
+    public Integer getPoint() {
+        return point;
+    }
+
+    public void setPoint(Integer point) {
+        this.point = point;
+    }
+
+    public Boolean isExact() {
+        return exact;
+    }
+
+    public void setExact(Boolean exact) {
+        this.exact = exact;
     }
 
     public static Bet createBetFromMatchBet(MatchBet matchBet) {

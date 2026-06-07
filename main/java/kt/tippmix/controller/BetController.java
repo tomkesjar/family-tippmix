@@ -1,9 +1,15 @@
 package kt.tippmix.controller;
 
 
+import kt.tippmix.model.AllBetsRow;
 import kt.tippmix.model.Bet;
 import kt.tippmix.model.BetHistoryRow;
+import kt.tippmix.model.BetInfo;
+import kt.tippmix.model.GameBetsGroup;
+import kt.tippmix.model.GameInfo;
 import kt.tippmix.model.MatchBet;
+import kt.tippmix.model.PlayerBetPair;
+import kt.tippmix.model.PlayerInfo;
 import kt.tippmix.model.Tip;
 import kt.tippmix.model.User;
 import kt.tippmix.service.BetService;
@@ -11,6 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 import java.util.List;
 
@@ -28,9 +37,19 @@ public class BetController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Tip>> getAll() {
-        List<Tip> tipList = (List) betService.getAll();
-        return ResponseEntity.ok().body(tipList);
+    public ResponseEntity<List<GameBetsGroup>> getAll() {
+        Map<GameInfo, Map<PlayerInfo, BetInfo>> grouped = betService.getAllEvaluated();
+
+        List<GameBetsGroup> response = grouped.entrySet().stream()
+                .map(gameEntry -> {
+                    List<PlayerBetPair> playerBets = gameEntry.getValue().entrySet().stream()
+                            .map(playerEntry -> new PlayerBetPair(playerEntry.getKey(), playerEntry.getValue()))
+                            .toList();
+                    return new GameBetsGroup(gameEntry.getKey(), playerBets);
+                })
+                .toList();
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/user")
