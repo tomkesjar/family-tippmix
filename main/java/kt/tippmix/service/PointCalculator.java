@@ -96,15 +96,27 @@ public class PointCalculator {
         }
     }
 
+    private boolean isWinnerBet(Bet bet, Game game) {
+        int betGoalDiff = bet.getHomeGoals() - bet.getAwayGoals();
+        int actualGoalDiff = game.getHomeGoals() - game.getAwayGoals();
+        boolean homeWin = betGoalDiff > 0 && actualGoalDiff > 0;
+        boolean awayWin = betGoalDiff < 0 && actualGoalDiff < 0;
+        boolean tie = betGoalDiff == 0 && actualGoalDiff == 0;
+        return homeWin || awayWin || tie;
+    }
+
     private Pair<Boolean, Integer> calculatePoint(Bet bet, Game game, Nation favouriteNation) {
         int result = 0;
         boolean isExact = false;
+        // exact match
         if (bet.getHomeGoals() == game.getHomeGoals() && bet.getAwayGoals() == game.getAwayGoals()) {
             result = exact;
             isExact = true;
+        // goal diff
         } else if ((bet.getHomeGoals() - bet.getAwayGoals()) == (game.getHomeGoals() - game.getAwayGoals())) {
             result = goalDiff;
-        } else if (bet.getWinner() == game.getWinner()) {
+        // simple winner
+        } else if (isWinnerBet(bet, game)) {
             result = simpleWinner;
         }
 
