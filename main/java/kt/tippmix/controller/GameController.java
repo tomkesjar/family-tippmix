@@ -71,7 +71,6 @@ public class GameController {
     public ResponseEntity<?> saveGameResults(@RequestBody List<GameResultUpdate> updates) {
         gameService.updateResults(updates);
         List<Game> gameList = updates.stream().map(e -> gameService.getById(e.getGameId()).orElseThrow()).toList();
-        //todo kt add here pointcalculator
         pointCalculator.updatePoints(gameList);
         return ResponseEntity.ok("Updated results for " + updates.size() + " games");
     }

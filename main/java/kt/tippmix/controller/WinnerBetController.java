@@ -108,7 +108,7 @@ public class WinnerBetController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<WinnerBetResponse> submitBonusValues(@RequestBody BonusPointRequest request) {
         try {
-            pointCalculator.addBonusPoint(request.secretName(), request.bonusPoint());
+            pointCalculator.addBonusPoint(request.email(), request.bonusPoint());
             return ResponseEntity.ok(new WinnerBetResponse(WinnerBetStatus.OK, "", null, null, null));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(

@@ -1,19 +1,15 @@
 package kt.tippmix.service;
 
-import kt.tippmix.model.AllBetsRow;
-import kt.tippmix.model.Bet;
-import kt.tippmix.model.BetHistoryRow;
-import kt.tippmix.model.BetInfo;
-import kt.tippmix.model.GameInfo;
-import kt.tippmix.model.PlayerInfo;
-import kt.tippmix.model.Tip;
+import kt.tippmix.model.*;
 import kt.tippmix.repository.BetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class BetService {
@@ -81,4 +77,25 @@ public class BetService {
     public void clearPreviousBets(Bet newBet) {
         betRepository.deletePreviousBets(newBet.getPlayerId(), newBet.getMatchId());
     }
+
+    /**
+     * Inserts a new bet if none exists for the given player+match, otherwise updates
+     * homeGoals, awayGoals and winner on the existing row. Point and exact are left untouched.
+     */
+    public Bet upsertBet(long matchId, long playerId, Integer homeGoals, Integer awayGoals, Integer winner) {
+        Optional<Bet> existing = betRepository.findByMatchIdAndPlayerId(matchId, playerId);
+        Bet bet = existing.orElseGet(Bet::new);
+        bet.setMatchId(matchId);
+        bet.setPlayerId(playerId);
+        bet.setHomeGoals(homeGoals);
+        bet.setAwayGoals(awayGoals);
+        bet.setWinner(winner);
+        return betRepository.save(bet);
+    }
+
+    public void deleteBet(Bet bet) {
+        betRepository.delete(bet);
+    }
+
+
 }

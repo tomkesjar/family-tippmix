@@ -32,4 +32,10 @@ public class SecretNameController {
         Pair<String, String> secretName = secretNameService.getSecretName(user);
         return ResponseEntity.ok().body(secretName);
     }
+
+    @GetMapping("/free")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<List<String>> getFreeSecretNames() {
+        return ResponseEntity.ok(secretNameService.getFreeSecretNames());
+    }
 }

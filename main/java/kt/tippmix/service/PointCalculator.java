@@ -76,7 +76,8 @@ public class PointCalculator {
             List<Bet> allBets = betService.getAllByGameId(game.getId());
             for (Bet currentBet : allBets) {
                 User actualPlayer = users.stream().filter(e -> e.getId() == currentBet.getPlayerId()).findAny().orElseThrow();
-                Nation favouriteNation = Nation.valueOf(actualPlayer.getFavouriteNation());
+                //TODO KT fallback to weakest team if not set
+                Nation favouriteNation = actualPlayer.getFavouriteNation() != null ? Nation.valueOf(actualPlayer.getFavouriteNation()) : Nation.UZBEGISTAN;
                 Pair<Boolean, Integer> pointEarned = calculatePoint(currentBet, game, favouriteNation);
                 Pair<Boolean, Integer> newPointEarned = Pair.of(pointEarned.getFirst(), pointEarned.getSecond());
 
@@ -170,12 +171,12 @@ public class PointCalculator {
     }
 
     /**
-     * Adds a bonus point amount to the player identified by secretName.
+     * Adds a bonus point amount to the player identified by email.
      * Both bonusPoint and total are incremented.
      */
-    public void addBonusPoint(String secretName, int points) {
-        User user = userRepository.findBySecretName(secretName)
-                .orElseThrow(() -> new RuntimeException("Játékos nem található: " + secretName));
+    public void addBonusPoint(String email, int points) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Játékos nem található: " + email));
         Point point = pointRepository.findByUser(user.getId()).orElseThrow();
         point.setBonusPoint(safe(point.getBonusPoint()) + points);
         point.setTotal(safe(point.getTotal()) + points);

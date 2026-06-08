@@ -10,6 +10,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static kt.tippmix.model.User.AuthProvider.LOCAL_USER;
 
 @Service
@@ -19,13 +21,15 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final SecretNameService secretNameService;
 
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager, PointCalculator pointCalculator) {
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager, PointCalculator pointCalculator, SecretNameService secretNameService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
         this.pointCalculator = pointCalculator;
+        this.secretNameService = secretNameService;
     }
 
     public boolean hasUserAlreadyRegistered(String email) {
@@ -57,5 +61,17 @@ public class AuthService {
         var user = get(request);
         String token = jwtService.generateToken(user);
         return new AuthenticationResponse(token);
+    }
+
+    public List<User> getAllUsersWithPlayerRole() {
+        List<User> users = (List) userRepository.findAll();
+        return users.stream().filter(e -> e.getRole() == User.Role.PLAYER).toList();
+    }
+
+    public void deleteUser(User user) {
+        String secretFileName = user.getSecretFileName();
+        String secretName = user.getSecretName();
+        secretNameService.addBackSecretNameOfDeletedPlayer(secretFileName, secretName);
+        userRepository.delete(user);
     }
 }

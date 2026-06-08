@@ -28,7 +28,7 @@ public class SecretNameService {
 public SecretNameService(@Autowired AllowedSecretNames allowedSecretNames, @Autowired UserRepository userRepository) {
     this.userRepository = userRepository;
     this.freeAllowedSecretNames = generateAllowedSecretNames(allowedSecretNames);
-    this.bookedAllowedSecretNames = new HashMap<>();
+    this.bookedAllowedSecretNames = pullExistingNamesFromDb();
 }
 
     public Pair<String,String> getSecretName(User user) {
@@ -51,6 +51,16 @@ public SecretNameService(@Autowired AllowedSecretNames allowedSecretNames, @Auto
         }
     }
 
+    public List<String> getFreeSecretNames() {
+        return new ArrayList<>(freeAllowedSecretNames.values());
+    }
+
+    // This can only be triggered by user with ADMIN roles
+    public void addBackSecretNameOfDeletedPlayer(String secretFileName, String secretName) {
+        bookedAllowedSecretNames.remove(secretFileName);
+        freeAllowedSecretNames.put(secretFileName, secretName);
+    }
+
     private Map<String, String> generateAllowedSecretNames(AllowedSecretNames allowedSecretNames) {
         Map<String, String> result = new HashMap<>();
         List<String> names = allowedSecretNames.getSecretNames();
@@ -64,6 +74,17 @@ public SecretNameService(@Autowired AllowedSecretNames allowedSecretNames, @Auto
             result.put(i1.next(), i2.next());
         }
 
+        return result;
+    }
+
+    private Map<String, String> pullExistingNamesFromDb() {
+        Map<String, String> result = new HashMap<>();
+        List<User> users = (List) userRepository.findAll();
+        List<String> bookedSecretFileNames = users.stream().map(User::getSecretFileName).toList();
+        bookedSecretFileNames.forEach(secretFileName -> {
+            String secretName = freeAllowedSecretNames.remove(secretFileName);
+            result.put(secretFileName, secretName);
+        });
         return result;
     }
 }

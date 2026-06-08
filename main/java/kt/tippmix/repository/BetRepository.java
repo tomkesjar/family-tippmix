@@ -11,9 +11,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface BetRepository extends CrudRepository<Bet, Long> {
+
+    @Query("SELECT b FROM Bet b WHERE b.matchId = :matchId AND b.playerId = :playerId")
+    Optional<Bet> findByMatchIdAndPlayerId(@Param("matchId") long matchId, @Param("playerId") long playerId);
 
 //    @Query("SELECT g FROM Game g WHERE g.gameDate >= :dateTime")
 //    List<Tip> findAllAfterDate(LocalDateTime dateTime);
