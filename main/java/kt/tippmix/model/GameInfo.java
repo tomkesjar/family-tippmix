@@ -8,5 +8,6 @@ public record GameInfo(
         String awayTeam,
         Integer gameHomeGoals,
         Integer gameAwayGoals,
-        Integer gameWinner
+        Integer gameWinner,
+        Boolean knockout
 ) {}

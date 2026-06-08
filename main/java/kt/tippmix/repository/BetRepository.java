@@ -28,8 +28,9 @@ public interface BetRepository extends CrudRepository<Bet, Long> {
            SELECT new kt.tippmix.model.BetHistoryRow(
                b.matchId, g.gameDate,
                g.homeTeam, g.awayTeam,
-               g.homeGoals, g.awayGoals,
-               b.homeGoals, b.awayGoals, b.winner, b.point)
+               g.homeGoals, g.awayGoals, g.winner,
+               b.homeGoals, b.awayGoals, b.winner, b.point,
+               g.knockout)
            FROM Bet b, Game g
            WHERE b.matchId = g.id AND b.playerId = :playerId
            ORDER BY g.gameDate
@@ -43,6 +44,7 @@ public interface BetRepository extends CrudRepository<Bet, Long> {
            SELECT new kt.tippmix.model.AllBetsRow(
                g.gameDate, g.homeTeam, g.awayTeam,
                g.homeGoals, g.awayGoals, g.winner,
+               g.knockout,
                b.id, b.matchId, b.playerId,
                b.homeGoals, b.awayGoals, b.winner, b.point, b.exact,
                u.secretName, u.secretFileName)

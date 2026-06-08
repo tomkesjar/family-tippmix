@@ -39,7 +39,8 @@ public class BetService {
 
         for (AllBetsRow row : rows) {
             GameInfo  game   = new GameInfo(row.getGameDate(), row.getHomeTeam(), row.getAwayTeam(),
-                                            row.getGameHomeGoals(), row.getGameAwayGoals(), row.getGameWinner());
+                                            row.getGameHomeGoals(), row.getGameAwayGoals(), row.getGameWinner(),
+                                            row.isKnockout());
             PlayerInfo player = new PlayerInfo(row.getSecretName(), row.getSecretFileName());
             BetInfo    bet    = new BetInfo(row.getBetId(), row.getMatchId(), row.getPlayerId(),
                                             row.getBetHomeGoals(), row.getBetAwayGoals(), row.getBetWinner(),

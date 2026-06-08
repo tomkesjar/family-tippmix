@@ -16,6 +16,7 @@ public class AllBetsRow {
     private Integer gameHomeGoals;
     private Integer gameAwayGoals;
     private Integer gameWinner;
+    private Boolean knockout;
 
     // --- Bet fields ---
     private long   betId;
@@ -33,6 +34,7 @@ public class AllBetsRow {
 
     public AllBetsRow(LocalDateTime gameDate, String homeTeam, String awayTeam,
                       Integer gameHomeGoals, Integer gameAwayGoals, Integer gameWinner,
+                      Boolean knockout,
                       long betId, long matchId, long playerId,
                       Integer betHomeGoals, Integer betAwayGoals, Integer betWinner,
                       Integer point, Boolean exact,
@@ -43,6 +45,7 @@ public class AllBetsRow {
         this.gameHomeGoals = gameHomeGoals;
         this.gameAwayGoals = gameAwayGoals;
         this.gameWinner    = gameWinner;
+        this.knockout      = Boolean.TRUE.equals(knockout);
         this.betId         = betId;
         this.matchId       = matchId;
         this.playerId      = playerId;
@@ -61,6 +64,7 @@ public class AllBetsRow {
     public Integer       getGameHomeGoals() { return gameHomeGoals; }
     public Integer       getGameAwayGoals() { return gameAwayGoals; }
     public Integer       getGameWinner()    { return gameWinner; }
+    public boolean       isKnockout()       { return knockout; }
     public long          getBetId()         { return betId; }
     public long          getMatchId()       { return matchId; }
     public long          getPlayerId()      { return playerId; }
