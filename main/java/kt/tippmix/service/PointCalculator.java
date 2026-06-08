@@ -96,7 +96,6 @@ public class PointCalculator {
         }
     }
 
-    //TODO KT here add +1 point for the knockout phase's winner
     private Pair<Boolean, Integer> calculatePoint(Bet bet, Game game, Nation favouriteNation) {
         int result = 0;
         boolean isExact = false;
