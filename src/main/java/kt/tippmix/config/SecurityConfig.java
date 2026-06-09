@@ -26,7 +26,7 @@ public class SecurityConfig {
     private final UserRepository userRepository;
     private final AuthenticationProvider authenticationProvider;
 
-    private static final String[] WHITE_LIST_URL = {"/", "/index.html", "/api/auth/**", "/assets/**", "/favicon.ico"};
+    private static final String[] WHITE_LIST_URL = {"/", "/index.html", "/api/auth/**", "/assets/**", "/favicon.ico", "/favicon.svg", "/icons.svg"};
 
     public SecurityConfig(UserRepository userRepository, AuthenticationProvider authenticationProvider) {
         this.userRepository = userRepository;
