@@ -50,11 +50,21 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {   //TODO KT: maybe return AuthenticationResponse
+        // ── Field presence ────────────────────────────────────────────────────
+        if (request.getUserName() == null || request.getUserName().isBlank() ||
+            request.getEmail()    == null || request.getEmail().isBlank()    ||
+            request.getPw()       == null || request.getPw().isBlank()) {
+            return ResponseEntity.badRequest().body("Minden mező kitöltése kötelező");
+        }
+        // ── Password length ───────────────────────────────────────────────────
+        if (request.getPw().length() < 4) {
+            return ResponseEntity.badRequest().body("A jelszónak legalább 4 karakter hosszúnak kell lennie");
+        }
         if (authService.hasUserAlreadyRegistered(request.getEmail())) {
-            return ResponseEntity.badRequest().body("Email already exists");
+            return ResponseEntity.badRequest().body("Ez az email cím már regisztrálva van");
         }
         if (!allowedEmailsForRegistration.contains(request.getEmail().toLowerCase())) {
-            return ResponseEntity.badRequest().body("Email is not registered as allowed email");
+            return ResponseEntity.badRequest().body("Ez az email cím nem szerepel a meghívottak listáján");
         }
         AuthenticationResponse response = authService.registerUser(request);
 

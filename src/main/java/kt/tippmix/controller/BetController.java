@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.List;
 import java.util.Map;
-
-import java.util.List;
 
 import static kt.tippmix.model.Bet.createBetFromMatchBet;
 
@@ -25,7 +25,7 @@ import static kt.tippmix.model.Bet.createBetFromMatchBet;
 @CrossOrigin(origins = "http://localhost:5173") // React dev server
 public class BetController {
 
-    private static final DateTimeFormatter DEADLINE_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH");
     private static final String OVER_DEADLINE_MSG = "A módositási határidő lejárt";
     private BetService betService;
     private GameService gameService;
@@ -35,7 +35,7 @@ public class BetController {
     @Value("${GROUP_MATCH_BET_SUBMISSION_DEADLINE}") String modificationDeadline) {
         this.betService = betService;
         this.gameService = gameService;
-        this.modificationDeadline = LocalDateTime.parse(modificationDeadline, DEADLINE_FMT);;
+        this.modificationDeadline = LocalDateTime.parse(modificationDeadline, DATE_TIME_FORMATTER);;
     }
 
     @GetMapping("/all")
@@ -89,7 +89,10 @@ public class BetController {
             matchBets.forEach(bet -> {
                 Bet newBet = createBetFromMatchBet(bet);
                 Game game = gameService.getById(newBet.getMatchId()).orElseThrow(() -> new IllegalArgumentException("No game id set"));
-                LocalDateTime deadlineDate = game.getGameDate().isBefore(modificationDeadline) ? game.getGameDate() : modificationDeadline;
+                LocalDateTime deadlineDate = game.getGameDate().minusDays(1);
+                if (!game.isKnockout()) {
+                    deadlineDate = game.getGameDate().isBefore(modificationDeadline) ? game.getGameDate() : modificationDeadline;
+                }
                 if (LocalDateTime.now().isAfter(deadlineDate)) {
                     throw new IllegalStateException(OVER_DEADLINE_MSG);
                 }

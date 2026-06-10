@@ -17,7 +17,7 @@ import java.time.format.DateTimeFormatter;
 @CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*")
 public class WinnerBetController {
 
-    private static final DateTimeFormatter DEADLINE_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH");
     private static final String DEADLINE_PASSED_MSG =
             "A határidő lejárt, már nem változtathatsz a tippjeiden";
 
@@ -52,7 +52,7 @@ public class WinnerBetController {
         User user = (User) authentication.getPrincipal();
 
         // Deadline check
-        LocalDateTime deadline = LocalDateTime.parse(modificationDeadline, DEADLINE_FMT);
+        LocalDateTime deadline = LocalDateTime.parse(modificationDeadline, DATE_TIME_FORMATTER);
         if (LocalDateTime.now().isAfter(deadline)) {
             return ResponseEntity.ok(new WinnerBetResponse(
                     WinnerBetStatus.ERROR, DEADLINE_PASSED_MSG,
