@@ -27,6 +27,6 @@ public interface GameRepository extends CrudRepository<Game, Long> {
 //            nativeQuery = true)
 //    void insertGame(@Param("game") Game game);
 
-    @Query("SELECT g FROM Game g WHERE g.gameDate >= :dateTime")
+    @Query("SELECT g FROM Game g WHERE g.gameDate > :dateTime")
     List<Game> findAllAfterDate(LocalDateTime dateTime);
 }
