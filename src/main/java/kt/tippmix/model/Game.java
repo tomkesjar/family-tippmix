@@ -28,7 +28,7 @@ public class Game {
     private Integer winner; // 1-0-2
 
     @Column(name="knockout")
-    private Boolean knockout = false;
+    private Boolean knockout;
 
 
     public Game() {
@@ -41,7 +41,7 @@ public class Game {
         this.awayTeam = awayTeam;
     }
 
-    public Game(Long id, LocalDateTime gameDate, String homeTeam, String awayTeam, Integer homeGoals, Integer awayGoals, Integer winner) {
+    public Game(Long id, LocalDateTime gameDate, String homeTeam, String awayTeam, Integer homeGoals, Integer awayGoals, Integer winner, boolean knockout) {
         this.id = id;
         this.gameDate = gameDate;
         this.homeTeam = homeTeam;
@@ -49,6 +49,7 @@ public class Game {
         this.homeGoals = homeGoals;
         this.awayGoals = awayGoals;
         this.winner = winner;
+        this.knockout = knockout;
     }
 
     public long getId() {

@@ -89,7 +89,8 @@ public class BetController {
             matchBets.forEach(bet -> {
                 Bet newBet = createBetFromMatchBet(bet);
                 Game game = gameService.getById(newBet.getMatchId()).orElseThrow(() -> new IllegalArgumentException("No game id set"));
-                LocalDateTime deadlineDate = game.getGameDate().minusDays(1);
+//                LocalDateTime deadlineDate = game.getGameDate().minusDays(1);
+                LocalDateTime deadlineDate = game.getGameDate().minusHours(1);
                 if (!game.isKnockout()) {
                     deadlineDate = game.getGameDate().isBefore(modificationDeadline) ? game.getGameDate() : modificationDeadline;
                 }
@@ -102,7 +103,7 @@ public class BetController {
             });
             return ResponseEntity.ok("Saved " + matchBets.size() + " bets");
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Could not save bets");
+            return ResponseEntity.internalServerError().body("Could not save bets: " + e.getMessage());
         }
     }
 }
